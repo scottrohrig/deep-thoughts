@@ -1,5 +1,6 @@
 const express = require( 'express' );
 const { ApolloServer } = require( 'apollo-server-express' );
+const { ApolloServerPluginLandingPageDisabled } = require( 'apollo-server-core' );
 
 const { typeDefs, resolvers } = require( './schemas' );
 const db = require( './config/connection' );
@@ -14,7 +15,33 @@ const startServer = async () => {
     resolvers,
     // authMiddleware is not defined...
     // context: authMiddleware
-  } );
+    plugins: [
+      //       {
+      //         async serverWillStart() {
+      //           return {
+      //             async renderLandingPage() {
+      //               const html = `
+      // <!DOCTYPE html>
+      // <html lang="en">
+      // <head>
+      //   <meta charset="UTF-8">
+      //   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      //   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      //   <title>Document</title>
+      // </head>
+      // <body>
+      //   <h1><a href="https://studio.apollographql.com/sandbox/explorer">Sandbox</a></h1>
+      // </body>
+      // </html>`;
+      //               return { html };
+      //             }
+      //           };
+      //         }
+      //       },
+      // ApolloServerPluginLandingPageDisabled()
+    ]
+    }
+      );
 
   // start the apollo server
   await server.start();
