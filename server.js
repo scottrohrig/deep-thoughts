@@ -3,6 +3,7 @@ const { ApolloServer } = require( 'apollo-server-express' );
 const { ApolloServerPluginLandingPageDisabled } = require( 'apollo-server-core' );
 
 const { typeDefs, resolvers } = require( './schemas' );
+const { authMiddleware } = require( './utils/auth' );
 const db = require( './config/connection' );
 
 const PORT = process.env.PORT || 3001;
@@ -14,7 +15,7 @@ const startServer = async () => {
     typeDefs,
     resolvers,
     // authMiddleware is not defined...
-    // context: authMiddleware
+    context: authMiddleware,
     plugins: [
       //       {
       //         async serverWillStart() {
@@ -40,8 +41,8 @@ const startServer = async () => {
       //       },
       // ApolloServerPluginLandingPageDisabled()
     ]
-    }
-      );
+  }
+  );
 
   // start the apollo server
   await server.start();
