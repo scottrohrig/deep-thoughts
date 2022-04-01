@@ -1248,3 +1248,15 @@ nav a:hover {
     align-items: center;
   }
 }
+
+.text-fb5 {
+  color: #fb3;
+}
+
+.text-fb5:visited {
+  color: #ff9100;
+}
+
+.rounded {
+  border-radius: var(--border-radius);
+}
