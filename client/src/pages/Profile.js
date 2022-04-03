@@ -1,15 +1,23 @@
 import React from 'react';
 import { Redirect, useParams } from 'react-router-dom';
-import ThoughtList from '../components/ThoughtList';
+
 import FriendList from '../components/FriendList';
-import { useQuery } from '@apollo/client';
+import ThoughtList from '../components/ThoughtList';
+import ThoughtForm from '../components/ThoughtForm';
+
+
+import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import { ADD_FRIEND } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const Profile = () => {
 
   // get username from params
   const { username: userParam } = useParams();
+
+  // mutations
+  const [ addFriend ] = useMutation( ADD_FRIEND );
 
   // query data
   const { loading, data } = useQuery(
@@ -20,20 +28,30 @@ const Profile = () => {
   // assign data to user
   const user = data?.me || data?.user || {};
 
-  if ( loading ) {
-    return <div>Loading...</div>;
-  }
-
   // redirect to profile if username in JWT is same as userParam ie, `/profile/:username`
   if ( Auth.loggedIn() && Auth.getProfile().data.username === userParam ) {
     return <Redirect to='/profile' />;
   }
 
-  if (!user?.username) {
+  if ( loading ) {
+    return <div>Loading...</div>;
+  }
+
+  if ( !user?.username ) {
     return (
       <h4>You must be logged in to view this content.</h4>
-    )
+    );
   }
+
+  const handleClick = async ( e ) => {
+    console.log( user._id, Auth.getProfile().data, Auth.getToken() );
+
+    try {
+      await addFriend( { id: user._id } );
+    } catch ( e ) {
+      console.error( e );
+    }
+  };
 
   return (
     <div>
@@ -42,6 +60,12 @@ const Profile = () => {
           {/* Viewing <usernames>'s profile. */ }
           Viewing { userParam ? `${ user.username }'s` : `your` } profile.
         </h2>
+
+        { userParam && (
+          <button className='btn ml-auto' onClick={ handleClick }>
+            Add Friend
+          </button>
+        ) }
       </div>
 
       <div className="flex-row justify-space-between mb-3">
@@ -60,6 +84,7 @@ const Profile = () => {
           />
         </div>
       </div>
+      <div className='mb-3'>{!userParam && <ThoughtForm />}</div>
     </div>
   );
 };
