@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ThoughtList = ( { thoughts, title } ) => {
-  if ( !thoughts.length ) {
+  // BUG: logged-in user profile page returns 400 error
+  if ( !thoughts ) {
     return <h3>
       Looks like there's nothing here
       Add some thoughts
