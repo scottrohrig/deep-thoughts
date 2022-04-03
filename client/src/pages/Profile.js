@@ -1,9 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import ThoughtList from '../components/ThoughtList';
 import FriendList from '../components/FriendList';
 import { useQuery } from '@apollo/client';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import Auth from '../utils/auth';
 
 const Profile = () => {
 
@@ -21,6 +22,17 @@ const Profile = () => {
 
   if ( loading ) {
     return <div>Loading...</div>;
+  }
+
+  // redirect to profile if username in JWT is same as userParam ie, `/profile/:username`
+  if ( Auth.loggedIn() && Auth.getProfile().data.username === userParam ) {
+    return <Redirect to='/profile' />;
+  }
+
+  if (!user?.username) {
+    return (
+      <h4>You must be logged in to view this content.</h4>
+    )
   }
 
   return (
