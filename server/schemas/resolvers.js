@@ -4,27 +4,6 @@ const { signToken } = require( '../utils/auth' );
 
 const resolvers = {
   Query: {
-    thoughts: async ( parent, { username } ) => {
-      const params = username ? { username } : {};
-      return Thought.find( params ).sort( { createdAt: -1 } );
-    },
-    thought: async ( parent, { _id } ) => {
-      return Thought.findOne( { _id } );
-    },
-    // get all users
-    users: async () => {
-      return User.find()
-        .select( '-__v -password' )
-        .populate( 'friends' )
-        .populate( 'thoughts' );
-    },
-    // get user by username
-    user: async ( parent, { username } ) => {
-      return User.findOne( { username } )
-        .select( '-__v -password' )
-        .populate( 'friends' )
-        .populate( 'thoughts' );
-    },
     me: async ( parent, args, context ) => {
       if ( context.user ) {
         const userData = await User.findOne( { _id: context.user._id } )
@@ -35,7 +14,28 @@ const resolvers = {
         return userData;
       }
       throw new AuthenticationError( 'Not logged in' );
-    }
+    },
+    // get all users
+    users: async () => {
+      return User.find()
+        .select( '-__v -password' )
+        .populate( 'thoughts' )
+        .populate( 'friends' );
+    },
+    // get user by username
+    user: async ( parent, { username } ) => {
+      return User.findOne( { username } )
+        .select( '-__v -password' )
+        .populate( 'friends' )
+        .populate( 'thoughts' );
+    },
+    thoughts: async ( parent, { username } ) => {
+      const params = username ? { username } : {};
+      return Thought.find( params ).sort( { createdAt: -1 } );
+    },
+    thought: async ( parent, { _id } ) => {
+      return Thought.findOne( { _id } );
+    },
   },
   Mutation: {
     addUser: async ( parent, args ) => {
@@ -82,7 +82,7 @@ const resolvers = {
           { _id: context.user._id },
           { $addToSet: { friends: friendId } },
           { new: true },
-        );
+        ).populate( 'friends' );
 
         return updatedUser;
       }
