@@ -1260,3 +1260,19 @@ nav a:hover {
 .rounded {
   border-radius: var(--border-radius);
 }
+
+.fs-lg {
+  font-size: larger;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.msg:hover {
+  color: var(--secondary);
+}
+
+.msg:hover .user {
+  color: var(--quatrinary);
+}
