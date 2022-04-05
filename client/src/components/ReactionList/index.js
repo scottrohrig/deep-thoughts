@@ -11,14 +11,14 @@ const ReactionList = ( { reactions } ) => {
       <div className='card-body'>
         { reactions &&
           reactions.map( reaction => (
-            <p className='pill mb-3' key={ reaction._id }>
-              { reaction.reactionBody } { '// ' }
+            <p className='pill mb-3 msg' key={ reaction._id }>
+              { reaction.reactionBody } { '- ' }
               <Link
                 to={ `/profile/${ reaction.username }` }
                 style={ { fontWeight: 700 } }
                 className='text-fb5'
               >
-                { reaction.username } on { reaction.createdAt }
+                <span className='fs-lg text-primary user'>{ reaction.username }</span> on { reaction.createdAt }
               </Link>
             </p>
           ) ) }
