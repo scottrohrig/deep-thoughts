@@ -43,13 +43,13 @@ const Profile = () => {
     );
   }
 
-  const handleClick = async ( e ) => {
+  const handleClick = async () => {
     console.log( user._id, Auth.getProfile().data, Auth.getToken() );
 
     try {
-      await addFriend( { id: user._id } );
-    } catch ( e ) {
-      console.error( e );
+      await addFriend( { variables: { id: user._id } } );
+    } catch ( err ) {
+      console.error( err );
     }
   };
 
@@ -84,7 +84,7 @@ const Profile = () => {
           />
         </div>
       </div>
-      <div className='mb-3'>{!userParam && <ThoughtForm />}</div>
+      <div className='mb-3'>{ !userParam && <ThoughtForm /> }</div>
     </div>
   );
 };
